@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2026-1-18
+  Bugfixes:
+    - Fixed burner inserter surface condition
+    - Fixed stone furnace inserter surface condition
+    - Fixed steel furnace inserter surface condition
+    - Fixed boiler inserter surface condition
+    - Fixed heating tower inserter surface condition
+  Changes:
+    - Requirement for burner beacons
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2026-1-11
+  Changes:
+    - Update for Space Age
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2024-10-24
   Bugfixes:

@@ -22,8 +22,21 @@ function adjust(usage, ext_mult)
 end
 
 for t, types in pairs(data.raw) do
-  if t ~= "generator" and t ~= "lamp" and t ~= "electric-turret"  and t ~= "roboport" and t ~= "beacon" and t ~= "electric-turret" and t ~= "arithmetic-combinator" and t ~= "decider-combinator" and t ~= "constant-combinator" and t ~= "programmable-speaker" and t ~= "power-switch" and t ~= "item" and t ~= "recipe" and t ~= "tile" and t ~= "technology" and t ~= "fluid" and not t:find("category") then
-    for p, prototype in pairs(types) do
+
+  -- if space age then change surface requirements for burners
+  if mods["space-age"] then
+    for _, prototype in pairs(types) do
+      if prototype.surface_conditions ~= nil then
+        for _, condition in pairs(prototype.surface_conditions) do
+          if condition.property == "pressure" and condition.min == 10 then
+            condition.min = 0
+          end
+        end
+      end
+    end
+  end
+  if t ~= "generator" and t ~= "lamp" and t ~= "electric-turret"  and t ~= "roboport" and t ~= "beacon" and t ~= "arithmetic-combinator" and t ~= "decider-combinator" and t ~= "constant-combinator" and t ~= "programmable-speaker" and t ~= "power-switch" and t ~= "item" and t ~= "recipe" and t ~= "tile" and t ~= "technology" and t ~= "fluid" and t ~= "ammo-turret" and t ~= "fusion-reactor" and not t:find("category") then
+    for _, prototype in pairs(types) do
       
       -- fix for combinator entities
       if string.find(t, "combinator") then prototype.energy_source = {type = "void"} end
@@ -34,7 +47,7 @@ for t, types in pairs(data.raw) do
       -- fix for power switch entities
       if t=="power-switch" then prototype.energy_source = {type = "void"} end
 
-      -- fix for speaker entities
+      --fix for speaker entities
       if t=="programmable-speaker" then prototype.energy_source = {type = "void"} end
 
       -- personal roboport fix
@@ -46,13 +59,15 @@ for t, types in pairs(data.raw) do
         prototype.power = adjust(prototype.charging_energy, prototype.charging_station_count)
         prototype.energy_source.input_flow_limit = "0W"
       end
+      --space age fix
+      if t=="asteroid-collector" then prototype.energy_source = {type = "void"} end
 
       -- long list of things so stuff doesn't break
       if not t:find("equipment") and prototype.energy_source and prototype.energy_source.type == "electric" and prototype.energy_source.usage_priority and prototype.energy_source.usage_priority:find("input") then
 
         -- make everything burner :p
         burner(prototype)
-
+        
         -- inserter changes
         if t == "inserter" then
           -- energy bump
@@ -69,7 +84,7 @@ end
 
 -- inserter leech setting
 if settings.startup["inserter-leech"].value then
-  for p, prototype in pairs(data.raw["inserter"]) do
+  for _, prototype in pairs(data.raw["inserter"]) do
     prototype.allow_burner_leech = true
   end
 end
